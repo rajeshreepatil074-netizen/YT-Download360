@@ -1,0 +1,8 @@
+{
+  "name": "yt-downloader-monorepo",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ]
+}

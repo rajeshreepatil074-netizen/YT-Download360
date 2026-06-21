@@ -1,0 +1,72 @@
+.root{font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;}
+:root{
+	--bg:#0f1724;
+	--surface:#0b1220;
+	--muted:#9aa6bf;
+	--card:#0f1724;
+	--accent:#0b5cff;
+	--glass: rgba(255,255,255,0.04);
+}
+html,body,#root{height:100%;}
+body{margin:0;background:linear-gradient(180deg,#071124 0%, #081428 60%);color:#e6eef8;-webkit-font-smoothing:antialiased}
+.app{max-width:1100px;margin:48px auto;padding:28px}
+.header{display:flex;align-items:center;gap:20px;margin-bottom:20px}
+.logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#6fb1ff);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(11,92,255,0.18)}
+.logo svg{width:32px;height:32px;color:#fff}
+.title{display:flex;flex-direction:column}
+.title h1{margin:0;font-weight:700;font-size:20px}
+.title p{margin:4px 0 0;color:var(--muted);font-size:13px}
+.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:14px;padding:20px;box-shadow:0 6px 30px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.03)}
+.form{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.input{flex:1;min-width:200px;padding:12px 14px;border-radius:10px;border:none;background:var(--glass);color:var(--muted);outline:none}
+.btn{padding:10px 16px;background:var(--accent);color:#fff;border:none;border-radius:10px;cursor:pointer;font-weight:600}
+.btn.secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+.status{margin-top:12px;color:var(--muted);font-size:14px}
+.result{margin-top:14px;display:flex;gap:16px;align-items:flex-start}
+.thumb{width:220px;border-radius:8px;flex-shrink:0}
+.meta h3{margin:0;font-size:16px}
+.meta div{color:var(--muted);font-size:13px;margin-top:6px}
+.description{margin-top:8px;color:var(--muted);font-size:13px;max-height:120px;overflow:auto}
+
+@media (max-width: 700px){
+	.thumb{width:120px}
+	.app{margin:24px;padding:18px}
+	.title h1{font-size:18px}
+	.form{flex-direction:column;align-items:stretch}
+	.input{width:100%}
+	.card{padding:16px}
+}
+
+.footer{margin-top:24px;text-align:center;color:var(--muted);font-size:13px}
+
+/* Tablet (portrait) */
+@media (max-width: 1024px) and (min-width: 701px) {
+	.app{max-width:900px;padding:22px}
+	.thumb{width:180px}
+	.meta h3{font-size:15px}
+	.title h1{font-size:19px}
+}
+
+/* Small phones */
+@media (max-width: 420px){
+	.logo{width:48px;height:48px}
+	.thumb{width:100%;max-width:220px;margin:0 auto}
+	.result{flex-direction:column;align-items:center}
+	.meta{width:100%}
+	.btn, .btn.secondary{width:100%;padding:14px;font-size:16px}
+	.input{padding:14px;font-size:15px}
+	.description{max-height:160px}
+}
+
+/* Landscape small devices */
+@media (max-height: 420px){
+	.app{margin:12px;padding:12px}
+	.card{padding:12px}
+}
+
+/* High-density touch spacing */
+button, .input{touch-action:manipulation}
+
+/* Focus states */
+.input:focus{box-shadow:0 0 0 4px rgba(11,92,255,0.12);outline:none}
+.btn:focus{outline:2px solid rgba(11,92,255,0.14);outline-offset:2px}
