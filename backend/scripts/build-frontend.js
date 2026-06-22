@@ -25,9 +25,10 @@ if (!pkg.scripts || !pkg.scripts.build) {
 console.log('Building frontend in', frontendDir);
 const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 
-const install = spawnSync(npm, ['install', '--no-audit', '--no-fund'], { cwd: frontendDir, stdio: 'inherit', env: { ...process.env, NPM_CONFIG_PRODUCTION: 'false' } });
+// Use `npm ci` in CI to install frontend deps into frontend/node_modules
+const install = spawnSync(npm, ['ci', '--no-audit', '--no-fund'], { cwd: frontendDir, stdio: 'inherit', env: { ...process.env, NPM_CONFIG_PRODUCTION: 'false' } });
 if (install.status !== 0) {
-  console.error('Frontend npm install failed with code', install.status);
+  console.error('Frontend npm ci failed with code', install.status);
   process.exit(install.status || 1);
 }
 
