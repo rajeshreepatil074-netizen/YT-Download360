@@ -246,6 +246,8 @@ if (fs.existsSync(frontDist)) {
 } else {
   // Provide a simple informational root page when frontend isn't built
   app.get('/', (req, res) => {
+    // Provide example links with a sample YouTube URL so clicking them returns usable responses
+    const example = encodeURIComponent('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
     res.send(`<!doctype html>
       <html>
         <head>
@@ -256,9 +258,10 @@ if (fs.existsSync(frontDist)) {
         <body style="font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.4;margin:24px;">
           <h1>YT-Download360 Backend</h1>
           <p>The backend is running. Use the API endpoints below from your frontend or API client.</p>
+          <p>Click the example links to try the API (they include a sample YouTube URL):</p>
           <ul>
-            <li><a href="/api/info?url=">/api/info?url=...</a> (GET)</li>
-            <li><a href="/api/download?url=">/api/download?url=...</a> (GET)</li>
+            <li><a href="/api/info?url=${example}">/api/info?url=&lt;example&gt;</a> (GET)</li>
+            <li><a href="/api/download?url=${example}">/api/download?url=&lt;example&gt;</a> (GET)</li>
             <li>POST endpoints: <code>/api/info</code> and <code>/api/download</code> (JSON body)</li>
           </ul>
         </body>
