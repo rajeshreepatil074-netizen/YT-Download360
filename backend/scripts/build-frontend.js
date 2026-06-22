@@ -31,7 +31,14 @@ if (install.status !== 0) {
   process.exit(install.status || 1);
 }
 
-const build = spawnSync(npm, ['run', 'build'], { cwd: frontendDir, stdio: 'inherit', env: { ...process.env, NPM_CONFIG_PRODUCTION: 'false' } });
+// Try running vite via node to avoid CI executable permission issues
+const viteBin = path.join(frontendDir, 'node_modules', 'vite', 'bin', 'vite.js');
+let build;
+if (fs.existsSync(viteBin)) {
+  build = spawnSync('node', [viteBin, 'build'], { cwd: frontendDir, stdio: 'inherit', env: { ...process.env, NPM_CONFIG_PRODUCTION: 'false' } });
+} else {
+  build = spawnSync(npm, ['run', 'build'], { cwd: frontendDir, stdio: 'inherit', env: { ...process.env, NPM_CONFIG_PRODUCTION: 'false' } });
+}
 if (build.status !== 0) {
   console.error('Frontend build failed with code', build.status);
   process.exit(build.status || 1);
