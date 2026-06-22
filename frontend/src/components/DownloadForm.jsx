@@ -23,7 +23,10 @@ export default function DownloadForm() {
     setInfo(null)
     setLink('')
     try {
-      const res = await axios.post('/api/info', { url })
+     const res = await axios.post(
+ `${SERVER_BASE}/api/info`,
+ { url }
+)
       if (res.data && res.data.title) {
         setInfo(res.data)
         setStatus('Info loaded')
@@ -43,7 +46,8 @@ export default function DownloadForm() {
     e.preventDefault()
     setStatus('Opening download...')
     // Use GET download which streams content and avoids server-side saving issues
-    const dlUrl = `/api/download?url=${encodeURIComponent(url)}`
+    const dlUrl =
+`${SERVER_BASE}/api/download?url=${encodeURIComponent(url)}`
     window.open(dlUrl, '_blank')
     setStatus('Download opened')
   }
