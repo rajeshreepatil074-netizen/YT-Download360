@@ -32,14 +32,25 @@ if (install.status !== 0) {
   process.exit(install.status || 1);
 }
 
-// Try running vite via node to avoid CI executable permission issues
+// Try running vite via node to avoid CI executable permission issues.
+// If vite isn't present at the expected path, fall back to npx, then to npm run build.
 const viteBin = path.join(frontendDir, 'node_modules', 'vite', 'bin', 'vite.js');
 let build;
 if (fs.existsSync(viteBin)) {
+  console.log('Building frontend using node', viteBin);
   build = spawnSync('node', [viteBin, 'build'], { cwd: frontendDir, stdio: 'inherit', env: { ...process.env, NPM_CONFIG_PRODUCTION: 'false' } });
-} else {
-  build = spawnSync(npm, ['run', 'build'], { cwd: frontendDir, stdio: 'inherit', env: { ...process.env, NPM_CONFIG_PRODUCTION: 'false' } });
+  if (build.status === 0) return console.log('Frontend build completed successfully');
+  console.warn('node <vite> build failed with code', build.status, '- falling back');
 }
+
+// Fallback: try using npx to run vite (will use local install if present or fetch temporarily)
+console.log('Attempting frontend build via npx vite build');
+build = spawnSync('npx', ['--yes', 'vite', 'build'], { cwd: frontendDir, stdio: 'inherit', env: { ...process.env, NPM_CONFIG_PRODUCTION: 'false' } });
+if (build.status === 0) return console.log('Frontend build completed successfully via npx');
+console.warn('npx vite build failed with code', build.status, '- falling back to npm run build');
+
+// Final fallback: run npm run build (may fail in some CI due to executable permissions)
+build = spawnSync(npm, ['run', 'build'], { cwd: frontendDir, stdio: 'inherit', env: { ...process.env, NPM_CONFIG_PRODUCTION: 'false' } });
 if (build.status !== 0) {
   console.error('Frontend build failed with code', build.status);
   process.exit(build.status || 1);
