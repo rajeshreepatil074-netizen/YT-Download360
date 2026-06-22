@@ -1,6 +1,13 @@
 import React, { useState } from 'react'
 import axios from 'axios'
-
+// Prefer build-time Vite env, then a runtime global `window.__SERVER_BASE__`,
+// then fall back to same-origin (useful when frontend is served by the backend),
+// finally default to localhost for local development.
+const SERVER_BASE =
+  import.meta.env.VITE_SERVER_BASE ||
+  (typeof window !== 'undefined' && window.__SERVER_BASE__) ||
+  (typeof window !== 'undefined' && window.location && window.location.origin) ||
+  'http://localhost:4000'
 export default function DownloadForm() {
   const [url, setUrl] = useState('')
   const [status, setStatus] = useState('')
