@@ -1,4 +1,6 @@
 [build]
 base = "frontend"
-command = "npm install && npm run build"
+# Ensure devDependencies (vite) are installed during Netlify builds
+# Use npm ci for reproducible installs and force dev deps to be included
+command = "NPM_CONFIG_PRODUCTION=false npm ci && npm run build"
 publish = "dist"
