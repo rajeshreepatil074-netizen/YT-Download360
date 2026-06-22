@@ -21,7 +21,10 @@ if (!fs.existsSync(downloadsDir)) fs.mkdirSync(downloadsDir, { recursive: true }
 
 app.post('/api/download', async (req, res) => {
   const { url } = req.body || {};
-  if (!url || !ytdl.validateURL(url)) return res.status(400).json({ error: 'Invalid URL' });
+  if (!url || !ytdl.validateURL(url)) {
+    console.warn('Invalid or missing url for POST /api/download', url);
+    return res.status(400).json({ error: 'Invalid or missing URL', received: url || null });
+  }
   try {
     const info = await fetchVideoInfo(url).catch(() => null);
     const title = (info && info.videoDetails && info.videoDetails.title) ? info.videoDetails.title : 'video';
@@ -122,7 +125,10 @@ async function fetchVideoInfo(url, attempts = 2) {
 
 app.post('/api/info', async (req, res) => {
   const { url } = req.body || {};
-  if (!url || !ytdl.validateURL(url)) return res.status(400).json({ error: 'Invalid URL' });
+  if (!url || !ytdl.validateURL(url)) {
+    console.warn('Invalid or missing url for POST /api/info', url);
+    return res.status(400).json({ error: 'Invalid or missing URL', received: url || null });
+  }
   try {
     const info = await fetchVideoInfo(url);
     const vd = info.videoDetails || {};
@@ -144,7 +150,10 @@ app.post('/api/info', async (req, res) => {
 
 app.get('/api/info', async (req, res) => {
   const url = req.query.url;
-  if (!url || !ytdl.validateURL(url)) return res.status(400).json({ error: 'Invalid URL' });
+  if (!url || !ytdl.validateURL(url)) {
+    console.warn('Invalid or missing url for GET /api/info', url);
+    return res.status(400).json({ error: 'Invalid or missing URL', received: url || null });
+  }
   try {
     const info = await fetchVideoInfo(url);
     const vd = info.videoDetails || {};
@@ -166,7 +175,10 @@ app.get('/api/info', async (req, res) => {
 
 app.get('/api/download', async (req, res) => {
   const url = req.query.url;
-  if (!url || !ytdl.validateURL(url)) return res.status(400).send('Invalid URL');
+  if (!url || !ytdl.validateURL(url)) {
+    console.warn('Invalid or missing url for GET /api/download', url);
+    return res.status(400).json({ error: 'Invalid or missing URL', received: url || null });
+  }
   try {
     const info = await fetchVideoInfo(url).catch(() => null);
     const title = (info && info.videoDetails && info.videoDetails.title) ? info.videoDetails.title : 'video';
@@ -230,6 +242,27 @@ if (fs.existsSync(frontDist)) {
   app.use(express.static(frontDist));
   app.get('*', (req, res) => {
     res.sendFile(path.join(frontDist, 'index.html'));
+  });
+} else {
+  // Provide a simple informational root page when frontend isn't built
+  app.get('/', (req, res) => {
+    res.send(`<!doctype html>
+      <html>
+        <head>
+          <meta charset="utf-8" />
+          <meta name="viewport" content="width=device-width,initial-scale=1" />
+          <title>YT-Download360 Backend</title>
+        </head>
+        <body style="font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.4;margin:24px;">
+          <h1>YT-Download360 Backend</h1>
+          <p>The backend is running. Use the API endpoints below from your frontend or API client.</p>
+          <ul>
+            <li><a href="/api/info?url=">/api/info?url=...</a> (GET)</li>
+            <li><a href="/api/download?url=">/api/download?url=...</a> (GET)</li>
+            <li>POST endpoints: <code>/api/info</code> and <code>/api/download</code> (JSON body)</li>
+          </ul>
+        </body>
+      </html>`);
   });
 }
 
