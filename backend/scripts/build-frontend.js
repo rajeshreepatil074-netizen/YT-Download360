@@ -25,13 +25,13 @@ if (!pkg.scripts || !pkg.scripts.build) {
 console.log('Building frontend in', frontendDir);
 const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 
-const install = spawnSync(npm, ['install', '--no-audit', '--no-fund'], { cwd: frontendDir, stdio: 'inherit' });
+const install = spawnSync(npm, ['install', '--no-audit', '--no-fund'], { cwd: frontendDir, stdio: 'inherit', env: { ...process.env, NPM_CONFIG_PRODUCTION: 'false' } });
 if (install.status !== 0) {
   console.error('Frontend npm install failed with code', install.status);
   process.exit(install.status || 1);
 }
 
-const build = spawnSync(npm, ['run', 'build'], { cwd: frontendDir, stdio: 'inherit' });
+const build = spawnSync(npm, ['run', 'build'], { cwd: frontendDir, stdio: 'inherit', env: { ...process.env, NPM_CONFIG_PRODUCTION: 'false' } });
 if (build.status !== 0) {
   console.error('Frontend build failed with code', build.status);
   process.exit(build.status || 1);
