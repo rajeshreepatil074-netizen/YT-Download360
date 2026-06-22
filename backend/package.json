@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon --watch server.js --ignore downloads server.js",
-    
+    "postinstall": "node scripts/build-frontend.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
